@@ -1,9 +1,10 @@
-﻿using System;
+﻿using Shop.Web.Data.Entities;
+using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace Shop.Web.Data
 {
-    public class Product
+    public class Product : IEntity
     {
         public int Id { get; set; }
 
@@ -28,6 +29,9 @@ namespace Shop.Web.Data
 
         [DisplayFormat(DataFormatString = "{0:N2}", ApplyFormatInEditMode = false)]
         public double Stock { get; set; }
+
+        public User User { get; set; }
+
     }
 
 }
