@@ -6,9 +6,11 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.IdentityModel.Tokens;
 using Shop.Web.Data;
 using Shop.Web.Data.Entities;
 using Shop.Web.Helpers;
+using System.Text;
 
 namespace Shop.Web
 {
@@ -31,6 +33,12 @@ namespace Shop.Web
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
+            services.ConfigureApplicationCookie(options =>
+            {
+                options.LoginPath = "/Account/NotAuthorized";
+                options.AccessDeniedPath = "/Account/NotAuthorized";
+            });
+
             services.AddIdentity<User, IdentityRole>(cfg =>
             {
                 cfg.User.RequireUniqueEmail = true;
@@ -47,6 +55,18 @@ namespace Shop.Web
             {
                 cfg.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
             });
+
+            services.AddAuthentication()
+              .AddCookie()
+              .AddJwtBearer(cfg =>
+                {
+                 cfg.TokenValidationParameters = new TokenValidationParameters
+                      {
+                         ValidIssuer = this.Configuration["Tokens:Issuer"],
+                         ValidAudience = this.Configuration["Tokens:Audience"],
+                            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(this.Configuration["Tokens:Key"]))
+                      };
+                 });
 
             services.AddScoped<ICountryRepository, CountryRepository>();
             services.AddScoped<IProductRepository, ProductRepository>();
@@ -67,7 +87,7 @@ namespace Shop.Web
                 app.UseExceptionHandler("/Home/Error");
                 app.UseHsts();
             }
-
+            app.UseStatusCodePagesWithReExecute("/error/{0}");
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseAuthentication();
