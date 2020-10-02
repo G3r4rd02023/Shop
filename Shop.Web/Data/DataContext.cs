@@ -7,6 +7,9 @@ namespace Shop.Web.Data
 {
     public class DataContext : IdentityDbContext<User>
     {
+
+        public DbSet<City> Cities { get; set; }
+
         public DbSet<Product> Products { get; set; }
 
         public DbSet<Order> Orders { get; set; }
