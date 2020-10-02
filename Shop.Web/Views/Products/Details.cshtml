@@ -28,9 +28,8 @@
         <dd>
             @if (!string.IsNullOrEmpty(Model.ImageUrl))
             {
-                <img src="@Url.Content(Model.ImageUrl)" alt="Image" style="width:200px;height:300px;max-width: 100%; height: auto;" />
+                <img src="@Url.Content(Model.ImageUrl)" alt="Image" style="width:300px;height:450px;max-width: 100%; height: auto;" />
             }
-
         </dd>
         <dt>
             @Html.DisplayNameFor(model => model.LastPurchase)
@@ -59,6 +58,6 @@
     </dl>
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model.Id" class=" btn btn-primary">Edit</a> |
+    <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning">Edit</a>
     <a asp-action="Index" class="btn btn-success">Back to List</a>
 </div>
